@@ -353,6 +353,42 @@ app.get('/', (req, res) => {
                             </div>
 
                             <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-manufacture font-bold mb-2">Tinggi End Plate (Hep) - mm</label>
+                                    <div class="flex gap-2 items-start">
+                                        <select id="endplate-height-select" class="flex-1 p-3 border-2 border-emerald-200 rounded-lg focus:outline-none focus:border-manufacture transition-all duration-300" onchange="toggleCustomInput('endplate-height')">
+                                            <option value="65">65</option>
+                                            <option value="60">60</option>
+                                            <option value="55">55</option>
+                                            <option value="50">50</option>
+                                            <option value="45">45</option>
+                                            <option value="40">40</option>
+                                            <option value="35">35</option>
+                                            <option value="32">32</option>
+                                            <option value="30" selected>30</option>
+                                            <option value="25">25</option>
+                                            <option value="20">20</option>
+                                            <option value="custom">Custom</option>
+                                        </select>
+                                        <input type="number" id="endplate-height-custom" placeholder="Custom (mm)" class="hidden w-32 p-3 border-2 border-emerald-200 rounded-lg focus:outline-none focus:border-manufacture" oninput="calculateSteelGratingWeight()">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-manufacture font-bold mb-2">Tebal End Plate (Tep) - mm</label>
+                                    <div class="flex gap-2 items-start">
+                                        <select id="endplate-thickness-select" class="flex-1 p-3 border-2 border-emerald-200 rounded-lg focus:outline-none focus:border-manufacture transition-all duration-300" onchange="toggleCustomInput('endplate-thickness')">
+                                            <option value="5">5</option>
+                                            <option value="4">4</option>
+                                            <option value="3" selected>3</option>
+                                            <option value="2">2</option>
+                                            <option value="custom">Custom</option>
+                                        </select>
+                                        <input type="number" id="endplate-thickness-custom" placeholder="Custom (mm)" class="hidden w-32 p-3 border-2 border-emerald-200 rounded-lg focus:outline-none focus:border-manufacture" oninput="calculateSteelGratingWeight()">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-6">
                                 <div><label class="block text-manufacture font-bold mb-2">Kondisi Barang</label><select id="grating-coating" class="w-full p-3 border-2 border-emerald-200 rounded-lg focus:outline-none focus:border-manufacture transition-all duration-300" onchange="calculateSteelGratingWeight()"><option value="galvanis">Galvanis</option><option value="non-galvanis">Tanpa Galvanis</option></select></div>
                                 <div><label class="block text-manufacture font-bold mb-2">Jenis Barang</label><select id="grating-type" class="w-full p-3 border-2 border-emerald-200 rounded-lg focus:outline-none focus:border-manufacture transition-all duration-300" onchange="calculateSteelGratingWeight()"><option value="serrated">Serrated</option><option value="polos">Polos</option></select></div>
                             </div>
@@ -809,14 +845,24 @@ app.get('/', (req, res) => {
                 case 'bearing-spacing': selectId = 'bearing-spacing-select'; customId = 'bearing-spacing-custom'; break;
                 case 'crossbar-spacing': selectId = 'crossbar-spacing-select'; customId = 'crossbar-spacing-custom'; break;
                 case 'crossbar-diameter': selectId = 'crossbar-diameter-select'; customId = 'crossbar-diameter-custom'; break;
+                case 'endplate-height': selectId = 'endplate-height-select'; customId = 'endplate-height-custom'; break;
+                case 'endplate-thickness': selectId = 'endplate-thickness-select'; customId = 'endplate-thickness-custom'; break;
                 default: return;
             }
             const select = document.getElementById(selectId);
             const customInput = document.getElementById(customId);
-            if (select.value === 'custom') { customInput.classList.remove('hidden'); customInput.focus(); }
-            else { customInput.classList.add('hidden'); customInput.value = ''; }
-            if (type === 'bearing-spacing') { onBearingSpacingChange(); }
-            else { calculateSteelGratingWeight(); }
+            if (select.value === 'custom') { 
+                customInput.classList.remove('hidden'); 
+                customInput.focus(); 
+            } else { 
+                customInput.classList.add('hidden'); 
+                customInput.value = ''; 
+            }
+            if (type === 'bearing-spacing') { 
+                onBearingSpacingChange(); 
+            } else { 
+                calculateSteelGratingWeight(); 
+            }
         }
 
         function getBearingHeight() { const select = document.getElementById('bearing-height-select'); if (select.value === 'custom') { return parseFloat(document.getElementById('bearing-height-custom').value) || 30; } return parseFloat(select.value); }
@@ -824,6 +870,21 @@ app.get('/', (req, res) => {
         function getBearingSpacing() { const select = document.getElementById('bearing-spacing-select'); if (select.value === 'custom') { return parseFloat(document.getElementById('bearing-spacing-custom').value) || 40; } return parseFloat(select.value); }
         function getCrossbarSpacing() { const select = document.getElementById('crossbar-spacing-select'); if (select.value === 'custom') { return parseFloat(document.getElementById('crossbar-spacing-custom').value) || 100; } return parseFloat(select.value); }
         function getCrossbarDiameter() { const select = document.getElementById('crossbar-diameter-select'); if (select.value === 'custom') { return parseFloat(document.getElementById('crossbar-diameter-custom').value) || 6; } return parseFloat(select.value); }
+        function getEndplateHeight() { 
+            const select = document.getElementById('endplate-height-select'); 
+            if (select.value === 'custom') { 
+                return parseFloat(document.getElementById('endplate-height-custom').value) || 30; 
+            } 
+            return parseFloat(select.value); 
+        }
+
+        function getEndplateThickness() { 
+            const select = document.getElementById('endplate-thickness-select'); 
+            if (select.value === 'custom') { 
+                return parseFloat(document.getElementById('endplate-thickness-custom').value) || 3; 
+            } 
+            return parseFloat(select.value); 
+        }
 
         function onBearingSpacingChange() {
             const jarakBearing = getBearingSpacing();
@@ -842,6 +903,8 @@ app.get('/', (req, res) => {
             const jarakBearing = getBearingSpacing();
             const jarakCrossbar = getCrossbarSpacing();
             const diameterCrossbar = getCrossbarDiameter();
+            const tinggiEndplate = getEndplateHeight();
+            const tebalEndplate = getEndplateThickness();
             
             if (panjang <= 0 || lebar <= 0) {
                 document.getElementById('calculated-weight').innerText = '0';
@@ -851,13 +914,18 @@ app.get('/', (req, res) => {
             const jumlahBearing = Math.ceil((lebar - tebalBearing) / jarakBearing) + 1;
             const volumeBearing = tinggiBearing * tebalBearing * panjang;
             const beratBearing = jumlahBearing * volumeBearing * Math.pow(10, -9) * 7850;
+            
             const volumeCrossbar = Math.pow(diameterCrossbar, 2) * lebar;
             const jumlahCrossbar = Math.ceil(panjang / jarakCrossbar);
             const beratCrossbar = volumeCrossbar * jumlahCrossbar * Math.pow(10, -9) * 7850;
-            const volumeEndPlate = tinggiBearing * tebalBearing * lebar * 2;
+            
+            // PERUBAHAN: menggunakan tinggiEndplate dan tebalEndplate
+            const volumeEndPlate = tinggiEndplate * tebalEndplate * lebar * 2;
             const beratEndPlate = volumeEndPlate * Math.pow(10, -9) * 7850;
+            
             const totalBerat = beratBearing + beratCrossbar + beratEndPlate;
             
+            // Update display
             document.getElementById('calc-jumlah-bearing').innerText = jumlahBearing;
             document.getElementById('calc-volume-bearing').innerText = volumeBearing.toLocaleString('id-ID');
             document.getElementById('calc-berat-bearing').innerText = beratBearing.toFixed(2);
@@ -867,30 +935,35 @@ app.get('/', (req, res) => {
             document.getElementById('calc-berat-endplate').innerText = beratEndPlate.toFixed(2);
             document.getElementById('calculated-weight').innerText = totalBerat.toFixed(2);
             
+            // Sisa kode harga sama...
             const kondisi = document.getElementById('grating-coating').value;
             const jenis = document.getElementById('grating-type').value;
             const quantity = parseInt(document.getElementById('grating-quantity').value) || 1;
             
             let hargaPerUnit = 0;
             if (kondisi === 'galvanis') {
-                if (jenis === 'serrated') { hargaPerUnit = (HARGA_BESI_STEELGRATING_PER_KG * totalBerat + HARGA_GALVANIS_STEELGRATING_PER_KG * totalBerat); }
-                else { hargaPerUnit = ((HARGA_BESI_STEELGRATING_PER_KG - 500) * totalBerat + HARGA_GALVANIS_STEELGRATING_PER_KG * totalBerat); }
+                if (jenis === 'serrated') { 
+                    hargaPerUnit = (HARGA_BESI_STEELGRATING_PER_KG * totalBerat + HARGA_GALVANIS_STEELGRATING_PER_KG * totalBerat); 
+                } else { 
+                    hargaPerUnit = ((HARGA_BESI_STEELGRATING_PER_KG - 500) * totalBerat + HARGA_GALVANIS_STEELGRATING_PER_KG * totalBerat); 
+                }
             } else {
-                if (jenis === 'serrated') { hargaPerUnit = (HARGA_BESI_STEELGRATING_PER_KG * totalBerat); }
-                else { hargaPerUnit = ((HARGA_BESI_STEELGRATING_PER_KG - 500) * totalBerat); }
+                if (jenis === 'serrated') { 
+                    hargaPerUnit = (HARGA_BESI_STEELGRATING_PER_KG * totalBerat); 
+                } else { 
+                    hargaPerUnit = ((HARGA_BESI_STEELGRATING_PER_KG - 500) * totalBerat); 
+                }
             }
             hargaPerUnit = hargaPerUnit * quantity;
             
-            const hargaSebelumPPN = hargaPerUnit;
-            const nilaiPPN = hargaSebelumPPN * PPN;
-            const hargaSetelahPPN = hargaSebelumPPN + nilaiPPN;
-            const hargaBulat = Math.ceil(hargaSetelahPPN / 1000) * 1000;
-            const hargaBulatSebelumPPN = hargaBulat / 111 * 100;
-            const PPNBulat = hargaBulat - hargaBulatSebelumPPN;
+            const hargaBulat = Math.ceil(hargaPerUnit / 1000) * 1000;
+            const nilaiPPN = hargaBulat * PPN;
+            const hargaSebelumPPN = hargaBulat - nilaiPPN;
+            const hargaSetelahPPN = hargaBulat;
 
             document.getElementById('estimated-price-per-unit').innerHTML = 'Rp ' + hargaBulat.toLocaleString('id-ID');
-            document.getElementById('estimated-price-before-ppn').innerHTML = 'Rp ' + Math.round(hargaBulatSebelumPPN).toLocaleString('id-ID');
-            document.getElementById('estimated-ppn-value').innerHTML = 'Rp ' + Math.round(PPNBulat).toLocaleString('id-ID');
+            document.getElementById('estimated-price-before-ppn').innerHTML = 'Rp ' + Math.round(hargaSebelumPPN).toLocaleString('id-ID');
+            document.getElementById('estimated-ppn-value').innerHTML = 'Rp ' + Math.round(nilaiPPN).toLocaleString('id-ID');
             
             return { totalBerat: totalBerat, hargaSebelumPPN: hargaSebelumPPN, nilaiPPN: nilaiPPN, hargaSetelahPPN: hargaSetelahPPN, hargaBulat: hargaBulat };
         }
@@ -979,19 +1052,16 @@ app.get('/', (req, res) => {
                 else { hargaPerUnit = ((HARGA_BESI_STAIR_TREAD_PER_KG - 500) * totalBeratGrating); }
             }
             
-            const hargaSebelumPPN = hargaPerUnit * quantity;
-            const nilaiPPN = hargaSebelumPPN * PPN;
-            const hargaSetelahPPN = hargaSebelumPPN + nilaiPPN;
-            const hargaBulat = Math.ceil(hargaSetelahPPN / 1000) * 1000;
-            const hargaBulatSebelumPPN = hargaBulat / 111 * 100;
-            const PPNBulat = hargaBulat - hargaBulatSebelumPPN;
+            const hargaBulat = Math.ceil(hargaPerUnit * quantity / 1000) * 1000;
+            const nilaiPPN = hargaBulat * PPN;
+            const hargaSebelumPPN = hargaBulat - nilaiPPN;
             
             const estimatedPriceEl = document.getElementById('stair-estimated-price');
             const priceBeforePpnEl = document.getElementById('stair-price-before-ppn');
             const ppnValueEl = document.getElementById('stair-ppn-value');
             if (estimatedPriceEl) estimatedPriceEl.innerHTML = 'Rp ' + hargaBulat.toLocaleString('id-ID');
-            if (priceBeforePpnEl) priceBeforePpnEl.innerHTML = 'Rp ' + Math.round(hargaBulatSebelumPPN).toLocaleString('id-ID');
-            if (ppnValueEl) ppnValueEl.innerHTML = 'Rp ' + Math.round(PPNBulat).toLocaleString('id-ID');
+            if (priceBeforePpnEl) priceBeforePpnEl.innerHTML = 'Rp ' + Math.round(hargaSebelumPPN).toLocaleString('id-ID');
+            if (ppnValueEl) ppnValueEl.innerHTML = 'Rp ' + Math.round(nilaiPPN).toLocaleString('id-ID');
             
             return { totalBerat: totalBerat, hargaSebelumPPN: hargaSebelumPPN, nilaiPPN: nilaiPPN, hargaSetelahPPN: hargaSetelahPPN, hargaBulat: hargaBulat };
         }
@@ -1026,9 +1096,9 @@ app.get('/', (req, res) => {
             const beratSupport = (supportTerm1 + supportTerm2) * Math.pow(10, -9) * 7850;
             const totalBerat = beratGrating + beratSupport;
             
-            document.getElementById('sgt-berat-grating').innerText = beratGrating.toFixed(2);
-            document.getElementById('sgt-berat-support').innerText = beratSupport.toFixed(2);
-            document.getElementById('sgt-calculated-weight').innerText = totalBerat.toFixed(2);
+            document.getElementById('sgt-berat-grating').innerText = beratGrating.toFixed(3);
+            document.getElementById('sgt-berat-support').innerText = beratSupport.toFixed(3);
+            document.getElementById('sgt-calculated-weight').innerText = totalBerat.toFixed(3);
             
             let hargaPerUnit = 0;
             if (kondisi === 'galvanis') {
@@ -1039,16 +1109,13 @@ app.get('/', (req, res) => {
                 else { hargaPerUnit = ((HARGA_BESI_SGT_PER_KG - 500) * totalBerat); }
             }
             hargaPerUnit = hargaPerUnit * quantity;
-            const hargaSebelumPPN = hargaPerUnit;
-            const nilaiPPN = hargaSebelumPPN * PPN;
-            const hargaSetelahPPN = hargaSebelumPPN + nilaiPPN;
-            const hargaBulat = Math.ceil(hargaSetelahPPN / 1000) * 1000;
-            const hargaBulatSebelumPPN = hargaBulat / 111 * 100;
-            const PPNBulat = hargaBulat - hargaBulatSebelumPPN;
+            const hargaBulat = Math.ceil(hargaPerUnit / 1000) * 1000;
+            const nilaiPPN = hargaBulat * PPN;
+            const hargaSebelumPPN = hargaBulat - nilaiPPN;
             
             document.getElementById('sgt-estimated-price').innerHTML = 'Rp ' + hargaBulat.toLocaleString('id-ID');
-            document.getElementById('sgt-price-before-ppn').innerHTML = 'Rp ' + Math.round(hargaBulatSebelumPPN).toLocaleString('id-ID');
-            document.getElementById('sgt-ppn-value').innerHTML = 'Rp ' + Math.round(PPNBulat).toLocaleString('id-ID');
+            document.getElementById('sgt-price-before-ppn').innerHTML = 'Rp ' + Math.ceil(hargaSebelumPPN).toLocaleString('id-ID');
+            document.getElementById('sgt-ppn-value').innerHTML = 'Rp ' + Math.ceil(nilaiPPN).toLocaleString('id-ID');
             
             return { beratGrating: beratGrating, beratSupport: beratSupport, totalBerat: totalBerat, hargaSebelumPPN: hargaSebelumPPN, nilaiPPN: nilaiPPN, hargaBulat: hargaBulat };
         }
@@ -1093,16 +1160,13 @@ app.get('/', (req, res) => {
                 else { hargaPerUnit = (HARGA_BESI_SGU_PER_KG * beratGrating); }
             }
             hargaPerUnit = hargaPerUnit * quantity;
-            const hargaSebelumPPN = hargaPerUnit;
-            const nilaiPPN = hargaSebelumPPN * PPN;
-            const hargaSetelahPPN = hargaSebelumPPN + nilaiPPN;
-            const hargaBulat = Math.ceil(hargaSetelahPPN / 1000) * 1000;
-            const hargaBulatSebelumPPN = hargaBulat / 111 * 100;
-            const PPNBulat = hargaBulat - hargaBulatSebelumPPN;
+            const hargaBulat = Math.ceil(hargaPerUnit / 1000) * 1000;
+            const nilaiPPN = hargaBulat * PPN;
+            const hargaSebelumPPN = hargaBulat - nilaiPPN;
             
             document.getElementById('sgu-estimated-price').innerHTML = 'Rp ' + hargaBulat.toLocaleString('id-ID');
-            document.getElementById('sgu-price-before-ppn').innerHTML = 'Rp ' + Math.round(hargaBulatSebelumPPN).toLocaleString('id-ID');
-            document.getElementById('sgu-ppn-value').innerHTML = 'Rp ' + Math.round(PPNBulat).toLocaleString('id-ID');
+            document.getElementById('sgu-price-before-ppn').innerHTML = 'Rp ' + Math.round(hargaSebelumPPN).toLocaleString('id-ID');
+            document.getElementById('sgu-ppn-value').innerHTML = 'Rp ' + Math.round(nilaiPPN).toLocaleString('id-ID');
             
             return { beratGrating: beratGrating, beratSupport: beratSupport, totalBerat: totalBerat, hargaSebelumPPN: hargaSebelumPPN, nilaiPPN: nilaiPPN, hargaBulat: hargaBulat };
         }
