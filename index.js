@@ -957,9 +957,8 @@ app.get('/', (req, res) => {
             hargaPerUnit = hargaPerUnit * quantity;
             
             const hargaBulat = Math.ceil(hargaPerUnit / 1000) * 1000;
-            const nilaiPPN = hargaBulat * PPN;
-            const hargaSebelumPPN = hargaBulat - nilaiPPN;
-            const hargaSetelahPPN = hargaBulat;
+            const hargaSebelumPPN = hargaBulat * 100 / 111;
+            const nilaiPPN = hargaSebelumPPN * PPN;
 
             document.getElementById('estimated-price-per-unit').innerHTML = 'Rp ' + hargaBulat.toLocaleString('id-ID');
             document.getElementById('estimated-price-before-ppn').innerHTML = 'Rp ' + Math.round(hargaSebelumPPN).toLocaleString('id-ID');
@@ -1053,8 +1052,8 @@ app.get('/', (req, res) => {
             }
             
             const hargaBulat = Math.ceil(hargaPerUnit * quantity / 1000) * 1000;
-            const nilaiPPN = hargaBulat * PPN;
-            const hargaSebelumPPN = hargaBulat - nilaiPPN;
+            const hargaSebelumPPN = hargaBulat * 100 / 111;
+            const nilaiPPN = hargaSebelumPPN * PPN;
             
             const estimatedPriceEl = document.getElementById('stair-estimated-price');
             const priceBeforePpnEl = document.getElementById('stair-price-before-ppn');
@@ -1110,12 +1109,12 @@ app.get('/', (req, res) => {
             }
             hargaPerUnit = hargaPerUnit * quantity;
             const hargaBulat = Math.ceil(hargaPerUnit / 1000) * 1000;
-            const nilaiPPN = hargaBulat * PPN;
-            const hargaSebelumPPN = hargaBulat - nilaiPPN;
-            
+            const hargaSebelumPPN = hargaBulat * 100 / 111;
+            const nilaiPPN = hargaSebelumPPN * PPN;
+
             document.getElementById('sgt-estimated-price').innerHTML = 'Rp ' + hargaBulat.toLocaleString('id-ID');
-            document.getElementById('sgt-price-before-ppn').innerHTML = 'Rp ' + Math.ceil(hargaSebelumPPN).toLocaleString('id-ID');
-            document.getElementById('sgt-ppn-value').innerHTML = 'Rp ' + Math.ceil(nilaiPPN).toLocaleString('id-ID');
+            document.getElementById('sgt-price-before-ppn').innerHTML = 'Rp ' + Math.round(hargaSebelumPPN).toLocaleString('id-ID');
+            document.getElementById('sgt-ppn-value').innerHTML = 'Rp ' + Math.round(nilaiPPN).toLocaleString('id-ID');
             
             return { beratGrating: beratGrating, beratSupport: beratSupport, totalBerat: totalBerat, hargaSebelumPPN: hargaSebelumPPN, nilaiPPN: nilaiPPN, hargaBulat: hargaBulat };
         }
@@ -1161,8 +1160,8 @@ app.get('/', (req, res) => {
             }
             hargaPerUnit = hargaPerUnit * quantity;
             const hargaBulat = Math.ceil(hargaPerUnit / 1000) * 1000;
-            const nilaiPPN = hargaBulat * PPN;
-            const hargaSebelumPPN = hargaBulat - nilaiPPN;
+            const hargaSebelumPPN = hargaBulat * 100 / 111;
+            const nilaiPPN = hargaSebelumPPN * PPN;
             
             document.getElementById('sgu-estimated-price').innerHTML = 'Rp ' + hargaBulat.toLocaleString('id-ID');
             document.getElementById('sgu-price-before-ppn').innerHTML = 'Rp ' + Math.round(hargaSebelumPPN).toLocaleString('id-ID');
