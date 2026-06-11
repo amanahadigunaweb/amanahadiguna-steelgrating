@@ -763,7 +763,7 @@ app.get('/', (req, res) => {
 
         <script>
         // ==================== KONSTANTA ====================
-        const HARGA_BESI_STEELGRATING_PER_KG = 13068;
+        const HARGA_BESI_STEELGRATING_PER_KG = 20000;
         const HARGA_GALVANIS_STEELGRATING_PER_KG = 8000;
         const HARGA_BESI_STAIR_TREAD_PER_KG = 32068;
         const HARGA_GALVANIS_STAIR_TREAD_PER_KG = 32068;
